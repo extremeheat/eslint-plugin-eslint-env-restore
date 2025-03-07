@@ -1,7 +1,7 @@
 {
-  "name": "prismarine-template",
+  "name": "eslint-plugin-eslint-env-restore",
   "version": "1.0.0",
-  "description": "A template repository to make it easy to create new prismarine repo",
+  "description": "Restore `/* eslint-env $env */` comment functionality in ESLint v9",
   "main": "src/index.js",
   "scripts": {
     "test": "mocha --reporter spec --exit",
@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/extremeheat/prismarine-template.git"
+    "url": "git+https://github.com/extremeheat/eslint-plugin-eslint-env-restore.git"
   },
   "keywords": [],
   "author": "extremeheat",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/extremeheat/prismarine-template/issues"
+    "url": "https://github.com/extremeheat/eslint-plugin-eslint-env-restore/issues"
   },
-  "homepage": "https://github.com/extremeheat/prismarine-template#readme",
+  "homepage": "https://github.com/extremeheat/eslint-plugin-eslint-env-restore#readme",
   "devDependencies": {
-    "prismarine-template": "file:.",
+    "eslint-plugin-eslint-env-restore": "file:.",
     "standard": "^17.0.0",
     "mocha": "^10.0.0"
   }

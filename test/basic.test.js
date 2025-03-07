@@ -1,8 +1,8 @@
 /* eslint-env mocha */
-const lib = require('prismarine-template')
 
 describe('basic', () => {
   it('test', () => {
+    require('eslint-plugin-eslint-env-restore')
     console.log('it works~')
   })
 })
