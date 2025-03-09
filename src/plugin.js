@@ -28,8 +28,10 @@ module.exports = {
         if (envs.length === 0) return [text]
 
         const globals = mapEnvsToGlobals(envs)
-        const globalNames = Object.keys(globals).join(', ')
-        const injectedComment = `/* global ${globalNames} */ ${text}`
+        // Check that code includes the global name somewhere to cut down on globals size
+        const globalNames = Object.keys(globals).filter(globalName => text.includes(globalName))
+        const prefix = `/* global ${globalNames.join(', ')} */`
+        const injectedComment = `${prefix} ${text}`
         return [injectedComment]
       },
       postprocess (messages) {
@@ -39,3 +41,18 @@ module.exports = {
     }
   }
 }
+
+// ESlint limits length of globals so we need to chunk them
+// const chunks = chunk(globalNames, 512)
+// let prefix = ''
+// for (const chunk of chunks) {
+//   prefix += `/* global ${chunk.join(', ')} */ `
+// }
+// function chunk (arr, len) {
+//   const chunks = []
+//   let i = 0
+//   while (i < arr.length) {
+//     chunks.push(arr.slice(i, i += len))
+//   }
+//   return chunks
+// }
