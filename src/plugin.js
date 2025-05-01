@@ -1,6 +1,9 @@
 // ./env-restore.js
 const envGlobals = require('globals')
 
+// Store prepended lengths for each file
+const prependedLengths = new Map()
+
 function extractEslintEnv (text) {
   const firstLine = text.split('\n')[0].trim()
   if (firstLine.startsWith('/* eslint-env ') && firstLine.endsWith('*/')) {
@@ -28,14 +31,40 @@ module.exports = {
         if (envs.length === 0) return [text]
 
         const globals = mapEnvsToGlobals(envs)
-        // Check that code includes the global name somewhere to cut down on globals size
         const globalNames = Object.keys(globals).filter(globalName => text.includes(globalName))
         const prefix = `/* global ${globalNames.join(', ')} */`
-        const injectedComment = `${prefix} ${text}`
+        const prepended = `${prefix} `
+        const injectedComment = prepended + text
+        // Store the length of the prepended string
+        prependedLengths.set(filename, prepended.length)
         return [injectedComment]
       },
-      postprocess (messages) {
-        return messages[0]
+      postprocess (messages, filename) {
+        const prependedLength = prependedLengths.get(filename)
+        if (prependedLength == null) {
+          return messages[0]
+        }
+        // Adjust fix ranges in messages
+        const adjustedMessages = messages[0].map(message => {
+          if (message.fix && message.fix.range[0] >= prependedLength) {
+            return {
+              ...message,
+              fix: {
+                ...message.fix,
+                range: [
+                  message.fix.range[0] - prependedLength,
+                  message.fix.range[1] - prependedLength
+                ]
+              }
+            }
+          } else {
+            // Discard fixes within the prepended part
+            return { ...message, fix: undefined }
+          }
+        })
+        // Clean up
+        prependedLengths.delete(filename)
+        return adjustedMessages
       },
       supportsAutofix: true
     }
