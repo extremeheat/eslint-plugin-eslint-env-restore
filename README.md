@@ -29,7 +29,7 @@ module.exports = [
 +   processor: 'eslint-env-restore/js',
     rules: {
         ...otherRules,
-+      'no-unused-vars': ['error', { vars: 'local', ... }]
++      'no-unused-vars': ['error', { vars: 'local' /*, ... */ }]
     }
 ```
 
